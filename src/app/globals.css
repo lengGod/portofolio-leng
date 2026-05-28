@@ -1,0 +1,195 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #00658d;
+  --color-secondary: #b30069;
+  --color-tertiary: #666000;
+  --color-on-background: #1c1b1b;
+  --color-surface: #fcf9f8;
+  --color-surface-container: #f0eded;
+  --color-surface-variant: #e5e2e1;
+  --color-primary-container: #00adef;
+  --color-secondary-container: #e00085;
+  --color-tertiary-fixed: #f3e700;
+  --color-on-surface-variant: #3e4850;
+  --color-outline: #6e7881;
+
+  --font-display: var(--font-anton);
+  --font-headline: var(--font-anton);
+  --font-body: var(--font-hanken-grotesk);
+  --font-label: var(--font-space-grotesk);
+
+  --spacing-margin-mobile: 16px;
+  --spacing-margin-desktop: 64px;
+  --spacing-unit: 8px;
+  --spacing-grid-size: 24px;
+  --spacing-gutter: 24px;
+}
+
+@layer base {
+  body {
+    background-color: #fcf9f8;
+    background-image: linear-gradient(#e5e2e1 1px, transparent 1px),
+      linear-gradient(90deg, #e5e2e1 1px, transparent 1px);
+    background-size: 24px 24px;
+    overflow-x: hidden;
+    @apply font-body text-on-background selection:bg-secondary selection:text-white;
+  }
+}
+
+@layer components {
+  /* Comic Panel Styles */
+  .comic-panel {
+    @apply border-4 border-on-background bg-white relative transition-all duration-200;
+    box-shadow: 8px 8px 0px 0px #1c1b1b;
+  }
+  .comic-panel:hover {
+    transform: translate(-4px, -4px) rotate(0.5deg);
+    box-shadow: 12px 12px 0px 0px #1c1b1b;
+  }
+
+  /* Halftone Background */
+  .halftone {
+    background-image: radial-gradient(circle, currentColor 1.2px, transparent 1px);
+    background-size: 8px 8px;
+  }
+
+  .halftone-animated {
+    @apply relative overflow-hidden;
+  }
+  .halftone-animated::before {
+    content: "";
+    @apply absolute inset-[-100%] pointer-events-none;
+    background-image: radial-gradient(
+      circle,
+      rgba(0, 0, 0, 0.05) 1.5px,
+      transparent 1.5px
+    );
+    background-size: 12px 12px;
+    z-index: 0;
+    animation: drift 60s linear infinite;
+  }
+
+  @keyframes drift {
+    from {
+      transform: translate(0, 0);
+    }
+    to {
+      transform: translate(50px, 50px);
+    }
+  }
+
+  /* Speech Bubble */
+  .speech-bubble {
+    @apply border-3 border-on-background bg-white relative p-6 rounded-[2rem];
+  }
+  .speech-bubble::after {
+    content: "";
+    @apply absolute bottom-[-20px] left-10;
+    border-width: 20px 20px 0 0;
+    border-style: solid;
+    border-color: #1c1b1b transparent transparent transparent;
+  }
+
+  /* Caption */
+  .panel-caption {
+    @apply bg-tertiary-fixed border-2 border-on-background px-3 py-1 absolute top-[-12px] left-3 z-20 font-label uppercase font-bold;
+  }
+
+  /* Entrance Animations */
+  .reveal-panel {
+    @apply opacity-0 transition-all duration-600 ease-out;
+    transform: translateY(50px) scale(0.95);
+  }
+  .reveal-panel.active {
+    @apply opacity-100;
+    transform: translateY(0) scale(1);
+  }
+  .reveal-panel.active:nth-child(even) {
+    animation: drawInLeft 0.7s forwards;
+  }
+  .reveal-panel.active:nth-child(odd) {
+    animation: drawInRight 0.7s forwards;
+  }
+
+  @keyframes drawInLeft {
+    0% {
+      opacity: 0;
+      transform: translateX(-40px) rotate(-2deg);
+    }
+    100% {
+      opacity: 1;
+      transform: translateX(0) rotate(0deg);
+    }
+  }
+  @keyframes drawInRight {
+    0% {
+      opacity: 0;
+      transform: translateX(40px) rotate(2deg);
+    }
+    100% {
+      opacity: 1;
+      transform: translateX(0) rotate(0deg);
+    }
+  }
+
+  /* Interactive Buttons */
+  .comic-btn {
+    @apply relative transition-all duration-200 border-4 border-on-background cursor-pointer;
+    box-shadow: 6px 6px 0px 0px #1c1b1b;
+  }
+  .comic-btn:hover {
+    transform: translate(-3px, -3px) rotate(-1deg) scale(1.02);
+    box-shadow: 10px 10px 0px 0px #1c1b1b;
+  }
+  .comic-btn:active {
+    transform: translate(2px, 2px);
+    box-shadow: 0px 0px 0px 0px #1c1b1b;
+  }
+
+  /* Particle/Floating Elements */
+  .floating-element {
+    @apply absolute pointer-events-none z-10 transition-transform duration-100 ease-out;
+  }
+
+  .particle {
+    @apply fixed w-2 h-2 bg-on-background rounded-sm pointer-events-none z-[9999] opacity-0;
+  }
+
+  /* SFX Text */
+  .manga-sfx-title {
+    @apply font-display uppercase tracking-[-1px] skew-x-[-10deg];
+    text-shadow: 2px 2px 0px #fff, 4px 4px 0px #000;
+  }
+
+  /* Stickers */
+  .boom-sticker {
+    @apply bg-tertiary-fixed border-3 border-on-background flex items-center justify-center font-display text-on-background uppercase transition-transform duration-300;
+    clip-path: polygon(
+      50% 0%,
+      61% 35%,
+      98% 35%,
+      68% 57%,
+      79% 91%,
+      50% 70%,
+      21% 91%,
+      32% 57%,
+      2% 35%,
+      39% 35%
+    );
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal-panel,
+  .comic-panel,
+  .comic-btn,
+  .halftone-animated::before,
+  .floating-element,
+  .particle {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+}
